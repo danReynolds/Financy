@@ -23,7 +23,7 @@ class ApiResponse
       end
     end
 
-    def supported_platforms
+    def platform_responses(args)
     end
 
     private

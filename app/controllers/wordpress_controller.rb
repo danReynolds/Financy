@@ -1,6 +1,8 @@
 class WordpressController < ApplicationController
   include WordpressApi
 
+  DEFAULT_CATEGORY_SIZE = 5
+
   def categories
     categories = WordpressApi::get_categories(wordpress_params)
     if categories.length == 1
@@ -9,16 +11,24 @@ class WordpressController < ApplicationController
         category_slug: category['slug'],
         post_size: wordpress_params[:post_size]
       )
-      category_text = posts.map do |post|
-        post['title']['rendered']
-      end.en.conjunction(article: false)
+
+      args = {
+        posts: posts.map do |post|
+          post['title']['rendered']
+        end.en.conjunction(article: false)
+      }
 
       render json: {
-        speech: "Got it. Here are some posts we found: #{category_text}."
+        speech: ApiResponse.get_response(:posts, args)
       }
     else
+      args = {
+        category: wordpress_params[:post_category],
+        categories: categories.sample(DEFAULT_CATEGORY_SIZE)
+          .map { |category| category['name'] }.en.conjunction(article: false)
+      }
       render json: {
-        speech: categories.map { |category| category[:name] }.en.conjunction(article: false)
+        speech: ApiResponse.get_response(:categories, args)
       }
     end
   end
