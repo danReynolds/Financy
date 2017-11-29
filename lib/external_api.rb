@@ -1,3 +1,5 @@
+require 'net/http'
+
 class ExternalApi
   class << self
     attr_accessor :api

@@ -1,3 +1,3 @@
-posts: https://www.nerdwallet.com/blog/wp-json/nw/v1/posts/?per_page={per_page}&search={search}
+posts: https://www.nerdwallet.com/blog/wp-json/nw/v1/posts/?per_page={post_size}&search={post_topic}
 reviews: https://www.nerdwallet.com/blog/wp-json/nw/v1/reviews/?search={search}
 tools: https://www.nerdwallet.com/blog/wp-json/nw/v1/tools/{tool_id}/
