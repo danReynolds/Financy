@@ -1,4 +1,4 @@
-require 'net/http'
+require 'open-uri'
 
 class ExternalApi
   class << self
@@ -6,11 +6,9 @@ class ExternalApi
 
     def fetch_response(endpoint)
       append_symbol = endpoint.include?('?') ? '&' : '?'
-      uri = URI("#{endpoint}#{append_symbol}api_key=#{@api_key}")
-      response = Net::HTTP.get_response(uri)
-      return nil unless response.code.to_i == 200
+      response = open(endpoint).read
 
-      body = JSON.parse(response.body)
+      body = JSON.parse(response)
       if body.is_a?(Hash)
         body = body.with_indifferent_access
         body = body[:data] if body[:data]

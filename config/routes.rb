@@ -2,6 +2,7 @@ Rails.application.routes.draw do
   root to: 'application#status'
 
   namespace :wordpress do
-    post :posts
+    post :categories
+    post :category_slug
   end
 end
