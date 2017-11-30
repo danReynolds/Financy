@@ -30,10 +30,12 @@ class ApiResponse
     def carousel_platform_responses(args)
       messages = []
       google_items = []
+      default_items = []
 
       args[:posts].each_with_index do |post, i|
         messages << fb_basic_card(post[:title], post[:image_url], post[:button_url])
         google_items << google_carousel_card_item(i, post[:title], post[:image_url], post[:button_url])
+        default_items << post[:link]
       end
 
       messages_hash_google = {
@@ -42,7 +44,12 @@ class ApiResponse
         :items => google_items
       }
 
-      messages + [messages_hash_google]
+      message_hash_default = {
+        :type => 0,
+        :speech => "Hi, Here are some relevant articles that we found: #{default_items.join(", \n")}"
+      }
+
+      messages + [message_hash_default] + [messages_hash_google]
     end
 
     def basic_platform_responses(args)
@@ -101,7 +108,7 @@ class ApiResponse
         },
         :title => title,
         :description => link,
-        :imageUrl => {
+        :image => {
           :url => imageUrl
         }
       }
