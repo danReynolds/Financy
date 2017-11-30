@@ -7,8 +7,6 @@ class ApiResponse
 
   class << self
 
-    @google_items = []
-    @messages = []
 
     def replace_response(response, args)
       args.inject(response) do |replaced_response, (key, val)|
@@ -32,48 +30,51 @@ class ApiResponse
 
 
     def platform_responses(args)
-
-      args['posts'].each_value do |value|
-
+      i = 0
+      @messages = []
+      @google_items = []
+      args[:posts].each do |post|
+        fb_carousel_card_item(post[:title], post[:imageUrl], post[:link])
+        google_carousel_card_item(i+1, post[:title], post[:imageUrl], post[:link])
       end
 
       messages_hash_google = {
           :type => "carousel_card",
           :platform => "google",
-          :items => google_items
+          :items => @google_items
         }
 
-      messages.push(messages_hash_google)
-
-      return {:messages => messages}
+      @messages << messages_hash_google
+      # return {:messages => @messages}
+      return @messages
     end
 
-    def google_carousel_card_item(args count, title, imageUrl, link)
+    def google_carousel_card_item(count, title, imageUrl, link)
       item = {
         :optionInfo => {
           :key => "Item #{count}",
           :synonyms => []
         },
-        :title => args[posts],
+        :title => title,
         :description => link,
         :imageUrl => {
           :url => imageUrl
         }
       }
-      google_items.push(item)
+      @google_items << item
     end
 
     def fb_carousel_card_item(title, imageUrl, link)
       messages_hash_fb = {
           :type => 1,
           :platform => "facebook",
-          :title => tile,
+          :title => title,
           :subtitle => link,
           :imageUrl => imageUrl,
           :buttons => []
         }
 
-      messages.push(messages_hash_fb)
+      @messages << messages_hash_fb
     end
 
     private

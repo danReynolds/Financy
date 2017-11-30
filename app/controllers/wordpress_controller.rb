@@ -16,8 +16,8 @@ class WordpressController < ApplicationController
         posts: posts.map do |post|
           { title: post['title']['rendered'],
             link: post['link'],
-            imageUrl: post['_embedded']['wp:featuredmedia']['source_url']}
-        end.en.conjunction(article: false)
+            imageUrl: post.dig('_embedded', 'wp:featuredmedia')[0]['source_url']}
+        end
       }
 
       render json: {
@@ -31,7 +31,7 @@ class WordpressController < ApplicationController
           .map { |category| category['name'] }.en.conjunction(article: false)
       }
       render json: {
-        speech: ApiResponse.get_response(:categories, args)
+        speech: ApiResponse.get_response(:categories, args),
       }
     end
   end
