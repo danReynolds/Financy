@@ -5,7 +5,7 @@ class ApiResponse
     "#{Rails.root.to_s}/config/api_responses.yml"
   ).with_indifferent_access
 
-  RESPONSE_TYPES = [:carousel, :basic]
+  RESPONSE_TYPES = [:carousel, :basic, :link_out]
 
   class << self
     def replace_response(response, args)
@@ -52,8 +52,24 @@ class ApiResponse
       ]
     end
 
+    def link_out_platform_responses(args)
+      [
+        google_link_out_card(args),
+        fb_basic_card(args[:title], args[:image_url], args[:url]),
+      ]
+    end
+
     def platform_responses(args, type = :basic)
       send("#{type}_platform_responses", args)
+    end
+
+    def google_link_out_card(args)
+      {
+          "type": "link_out_chip",
+          "platform": "google",
+          "destinationName": args[:title],
+          "url": args[:url]
+      }
     end
 
     def google_basic_card(args)

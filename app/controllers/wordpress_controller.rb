@@ -40,23 +40,24 @@ class WordpressController < ApplicationController
 
   def product
     product = WordpressApi::get_product(wordpress_params.slice(:product)).first
-    product_data = product['nw_review_data']['product_data']['data']
-    args = { title: product.dig('nw_review_data', 'name') }
-
-    if product_data
-      args.merge!({
+    product_data = product.dig('nw_review_data', 'product_data', 'data')
+    response_type = :basic
+    args = if product_data
+      {
         button_url: "https://nerdwallet.com#{product_data['detail_link']}",
         image_url: product_data['image_source_large'],
         button_title: 'View',
-        formatted_text: ''
-      })
+        formatted_text: '',
+        title: product.dig('nw_review_data', 'name')
+      }
     else
-      args = { button_url: product['link'] }
+      response_type = :link_out
+      { url: product['link'], title: product['title']['rendered'] }
     end
 
     render json: {
       speech: ApiResponse.get_response(:product, args),
-      messages: ApiResponse.platform_responses(args)
+      messages: ApiResponse.platform_responses(args, response_type)
     }
   end
 
