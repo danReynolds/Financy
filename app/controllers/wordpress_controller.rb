@@ -22,7 +22,7 @@ class WordpressController < ApplicationController
 
       render json: {
         speech: ApiResponse.get_response(:posts, args),
-        messages: ApiResponse.platform_responses(args)
+        messages: ApiResponse.carousel_platform_responses(args)
       }
     else
       args = {
