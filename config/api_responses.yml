@@ -4,6 +4,6 @@ posts:
 categories:
   - 'We found some categories underneath {category}. Here they are: {categories}.'
 product:
-  - 'We found information about {name}.'
+  - 'We found information about {title}.'
 tool:
-  - 'Here is the {name}:'
+  - 'Here is the {title}:'

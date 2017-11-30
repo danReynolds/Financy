@@ -14,15 +14,17 @@ class WordpressController < ApplicationController
 
       args = {
         posts: posts.map do |post|
-          { title: post['title']['rendered'],
-            link: post['link'],
-            imageUrl: post.dig('_embedded', 'wp:featuredmedia')[0]['source_url']}
+          {
+            title: post['title']['rendered'],
+            button_url: post['link'],
+            image_url: post.dig('_embedded', 'wp:featuredmedia')[0]['source_url']
+          }
         end
       }
 
       render json: {
         speech: ApiResponse.get_response(:posts, args),
-        messages: ApiResponse.carousel_platform_responses(args)
+        messages: ApiResponse.platform_responses(args, :carousel)
       }
     else
       args = {
@@ -38,16 +40,23 @@ class WordpressController < ApplicationController
 
   def product
     product = WordpressApi::get_product(wordpress_params.slice(:product)).first
-    data = product['nw_review_data']['product_data']['data']
+    product_data = product['nw_review_data']['product_data']['data']
+    args = { title: product.dig('nw_review_data', 'name') }
 
-    args = {
-      detail_link: data['detail_link'],
-      img_source: data['image_source_large'],
-      name: product['nw_review_data']['name']
-    }
+    if product_data
+      args.merge!({
+        button_url: "https://nerdwallet.com#{product_data['detail_link']}",
+        image_url: product_data['image_source_large'],
+        button_title: 'View',
+        formatted_text: ''
+      })
+    else
+      args = { button_url: product['link'] }
+    end
 
     render json: {
-      speech: ApiResponse.get_response(:product, args)
+      speech: ApiResponse.get_response(:product, args),
+      messages: ApiResponse.platform_responses(args)
     }
   end
 

@@ -5,6 +5,8 @@ class ApiResponse
     "#{Rails.root.to_s}/config/api_responses.yml"
   ).with_indifferent_access
 
+  RESPONSE_TYPES = [:carousel, :basic]
+
   class << self
     def replace_response(response, args)
       args.inject(response) do |replaced_response, (key, val)|
@@ -30,8 +32,8 @@ class ApiResponse
       google_items = []
 
       args[:posts].each_with_index do |post, i|
-        messages << fb_carousel_card_item(post[:title], post[:imageUrl], post[:link])
-        google_items << google_carousel_card_item(i, post[:title], post[:imageUrl], post[:link])
+        messages << fb_basic_card(post[:title], post[:image_url], post[:button_url])
+        google_items << google_carousel_card_item(i, post[:title], post[:image_url], post[:button_url])
       end
 
       messages_hash_google = {
@@ -41,6 +43,38 @@ class ApiResponse
       }
 
       messages + [messages_hash_google]
+    end
+
+    def basic_platform_responses(args)
+      [
+        fb_basic_card(args[:title], args[:image_url], args[:button_url]),
+        google_basic_card(args)
+      ]
+    end
+
+    def platform_responses(args, type = :basic)
+      send("#{type}_platform_responses", args)
+    end
+
+    def google_basic_card(args)
+      {
+          "type": "basic_card",
+          "platform": "google",
+          "title": args[:title],
+          "subtitle": args[:subtitle],
+          "formattedText": args[:formatted_text],
+          "image": {
+            "url": args[:image_url]
+          },
+          "buttons": [
+            {
+              "title": args[:button_title],
+              "openUrlAction": {
+                "url": args[:button_url]
+              }
+            }
+          ]
+        }
     end
 
     def google_carousel_card_item(count, title, imageUrl, link)
@@ -57,7 +91,7 @@ class ApiResponse
       }
     end
 
-    def fb_carousel_card_item(title, imageUrl, link)
+    def fb_basic_card(title, imageUrl, link)
       {
         :type => 1,
         :platform => "facebook",
