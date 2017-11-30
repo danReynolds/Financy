@@ -1,6 +1,6 @@
 posts:
-  - 'Here are some posts: {posts}.'
-  - 'Sure, I grabbed you some posts: {posts}.'
+  - 'Here are some posts:'
+  - 'Sure, I grabbed you some posts:'
 categories:
   - 'We found some categories underneath {category}. Here they are: {categories}.'
 product:
