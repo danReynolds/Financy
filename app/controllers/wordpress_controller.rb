@@ -40,7 +40,7 @@ class WordpressController < ApplicationController
     args = {
       detail_link: data['detail_link'],
       img_source: data['image_source_large'],
-      product_name: product['name']
+      name: product['nw_review_data']['name']
     }
 
     render json: {
