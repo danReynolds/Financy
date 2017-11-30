@@ -3,5 +3,6 @@ Rails.application.routes.draw do
 
   namespace :wordpress do
     post :categories
+    post :product
   end
 end

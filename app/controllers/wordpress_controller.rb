@@ -33,11 +33,24 @@ class WordpressController < ApplicationController
     end
   end
 
+  def product
+    product = WordpressApi::get_product(wordpress_params.slice(:product))
+    args = {
+      detail_link: product['product_data']['data']['detail_link'],
+      img_source: product['product_data']['data']['image_source_large'],
+      product_name: product['name']
+    }
+
+    render json: {
+      speech: ApiResponse.get_response(:product, args)
+    }
+  end
+
   private
 
   def wordpress_params
     params.require(:result).require(:parameters).permit(
-      :post_size, :post_category, :post_slug
+      :post_size, :post_category, :product
     )
   end
 end

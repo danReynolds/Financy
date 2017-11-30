@@ -12,6 +12,11 @@ module WordpressApi
         url = replace_url(@api[:posts_by_category], args)
         fetch_response(url)
       end
+
+      def get_product(args = {})
+        url = replace_url(@api[:product], args)
+        fetch_response(url)
+      end
     end
   end
 end
