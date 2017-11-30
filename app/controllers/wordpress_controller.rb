@@ -62,16 +62,15 @@ class WordpressController < ApplicationController
   end
 
   def tool
-
     tool = WordpressApi::get_tool(tool: wordpress_params[:tool])
-
     args = {
-      name: tool['title']['rendered'],
+      title: tool['title']['rendered'],
       url: tool['nw_tool_url']
     }
 
     render json: {
-      speech: ApiResponse.get_response(:tool, args)
+      speech: ApiResponse.get_response(:tool, args),
+      messages: ApiResponse.platform_responses(args, :link_out)
     }
   end
 
