@@ -14,12 +14,15 @@ class WordpressController < ApplicationController
 
       args = {
         posts: posts.map do |post|
-          post['title']['rendered']
-        end.en.conjunction(article: false)
+          { title: post['title']['rendered'],
+            link: post['link'],
+            imageUrl: post.dig('_embedded', 'wp:featuredmedia')[0]['source_url']}
+        end
       }
 
       render json: {
-        speech: ApiResponse.get_response(:posts, args)
+        speech: ApiResponse.get_response(:posts, args),
+        messages: ApiResponse.platform_responses(args)
       }
     else
       args = {
@@ -28,7 +31,7 @@ class WordpressController < ApplicationController
           .map { |category| category['name'] }.en.conjunction(article: false)
       }
       render json: {
-        speech: ApiResponse.get_response(:categories, args)
+        speech: ApiResponse.get_response(:categories, args),
       }
     end
   end
