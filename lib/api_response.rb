@@ -33,7 +33,7 @@ class ApiResponse
 
       args[:posts].each_with_index do |post, i|
         messages << fb_basic_card(post[:title], post[:image_url], post[:button_url])
-        google_items << google_carousel_card_item(i, post[:title], post[:image_url], post[:button_url])
+        google_items << google_carousel_card_item(post[:slug], post[:title], post[:image_url], post[:button_url])
       end
 
       messages_hash_google = {
@@ -93,10 +93,10 @@ class ApiResponse
         }
     end
 
-    def google_carousel_card_item(count, title, imageUrl, link)
+    def google_carousel_card_item(slug, title, imageUrl, link)
       {
         :optionInfo => {
-          :key => "Item #{count}",
+          :key => slug,
           :synonyms => []
         },
         :title => title,

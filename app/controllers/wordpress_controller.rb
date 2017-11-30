@@ -17,14 +17,18 @@ class WordpressController < ApplicationController
           {
             title: post['title']['rendered'],
             button_url: post['link'],
-            image_url: post.dig('_embedded', 'wp:featuredmedia')[0]['source_url']
+            image_url: post.dig('_embedded', 'wp:featuredmedia')[0]['source_url'],
+            slug: post['slug']
           }
         end
       }
 
       render json: {
         speech: ApiResponse.get_response(:posts, args),
-        messages: ApiResponse.platform_responses(args, :carousel)
+        messages: ApiResponse.platform_responses(args, :carousel),
+        contextOut: [{
+          name: 'posts', lifespan: 1, parameters: { posts: args[:posts] }
+        }]
       }
     else
       args = {
