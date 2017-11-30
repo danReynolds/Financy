@@ -32,8 +32,8 @@ class ApiResponse
       google_items = []
 
       args[:posts].each_with_index do |post, i|
-        messages << fb_basic_card(post[:title], post[:image_url], post[:button_url])
-        messages << slack_basic_card('slack', post[:title], post[:image_url], post[:button_url])
+        messages << basic_card('facebook', post[:title], post[:image_url], post[:button_url])
+        messages << basic_card('slack', post[:title], post[:image_url], post[:button_url])
         google_items << google_carousel_card_item(post[:slug], post[:title], post[:image_url], post[:button_url])
       end
 
@@ -48,8 +48,8 @@ class ApiResponse
 
     def basic_platform_responses(args)
       [
-        slack_basic_card("facebook",args[:title], args[:image_url], args[:button_url]),
-        slack_basic_card("slack",args[:title], args[:image_url], args[:button_url]),
+        basic_card("facebook", args[:title], args[:image_url], args[:button_url]),
+        basic_card("slack", args[:title], args[:image_url], args[:button_url]),
         google_basic_card(args)
       ]
     end
@@ -57,8 +57,8 @@ class ApiResponse
     def link_out_platform_responses(args)
       [
         google_link_out_card(args),
-        slack_basic_card("facebook",args[:title], args[:image_url], args[:url]),
-        slack_basic_card("slack",args[:title], args[:image_url], args[:url]),
+        basic_card("facebook", args[:title], args[:image_url], args[:url]),
+        basic_card("slack", args[:title], args[:image_url], args[:url]),
       ]
     end
 
@@ -110,7 +110,7 @@ class ApiResponse
       }
     end
 
-    def slack_basic_card(platform, title, imageUrl, link)
+    def basic_card(platform, title, imageUrl, link)
       {
         :type => 1,
         :platform => platform,
