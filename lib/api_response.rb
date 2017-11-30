@@ -51,7 +51,7 @@ class ApiResponse
         google_basic_card(args)
       ]
     end
-    
+
     def link_out_platform_responses(args)
       [
         google_link_out_card(args),
@@ -101,7 +101,7 @@ class ApiResponse
         },
         :title => title,
         :description => link,
-        :imageUrl => {
+        :image => {
           :url => imageUrl
         }
       }
