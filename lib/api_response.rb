@@ -106,7 +106,7 @@ class ApiResponse
         },
         :title => title,
         :description => link,
-        :imageUrl => {
+        :image => {
           :url => imageUrl
         }
       }
