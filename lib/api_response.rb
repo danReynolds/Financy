@@ -30,16 +30,11 @@ class ApiResponse
     def carousel_platform_responses(args)
       messages = []
       google_items = []
-      default_items = []
 
       args[:posts].each_with_index do |post, i|
         messages << fb_basic_card(post[:title], post[:image_url], post[:button_url])
         google_items << google_carousel_card_item(i, post[:title], post[:image_url], post[:button_url])
-        default_items << post[:link]
       end
-
-      messages << default_google_message
-      messages << default_facebook_message
 
       messages_hash_google = {
         :type => "carousel_card",
@@ -47,15 +42,17 @@ class ApiResponse
         :items => google_items
       }
 
-      message_hash_default = {
-        :type => 0,
-        :speech => "Hi, Here are some relevant articles that we found: #{default_items.join(", \n")}"
-      }
-
-      messages + [message_hash_default] + [messages_hash_google]
+      messages + [messages_hash_google]
     end
 
+    def basic_platform_responses(args)
+      [
+        fb_basic_card(args[:title], args[:image_url], args[:button_url]),
+        google_basic_card(args)
+      ]
+    end
 
+<<<<<<< HEAD
     def link_out_platform_responses(args)
       [
         google_link_out_card(args),
@@ -74,14 +71,31 @@ class ApiResponse
           "destinationName": args[:title],
           "url": args[:url]
       }
+=======
+    def platform_responses(args, type = :basic)
+      send("#{type}_platform_responses", args)
+>>>>>>> Merge with master
     end
 
     def google_basic_card(args)
       {
-        :type => 0,
-        :platform => "facebook",
-        :speech => "Hi, Here are some relevant articles that we found:"
-      }
+          "type": "basic_card",
+          "platform": "google",
+          "title": args[:title],
+          "subtitle": args[:subtitle],
+          "formattedText": args[:formatted_text],
+          "image": {
+            "url": args[:image_url]
+          },
+          "buttons": [
+            {
+              "title": args[:button_title],
+              "openUrlAction": {
+                "url": args[:button_url]
+              }
+            }
+          ]
+        }
     end
 
     def google_carousel_card_item(count, title, imageUrl, link)
@@ -92,7 +106,7 @@ class ApiResponse
         },
         :title => title,
         :description => link,
-        :image => {
+        :imageUrl => {
           :url => imageUrl
         }
       }
