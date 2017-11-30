@@ -3,6 +3,5 @@ Rails.application.routes.draw do
 
   namespace :wordpress do
     post :categories
-    post :category_slug
   end
 end

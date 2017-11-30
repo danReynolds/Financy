@@ -33,9 +33,6 @@ class WordpressController < ApplicationController
     end
   end
 
-  def category_slug
-  end
-
   private
 
   def wordpress_params
