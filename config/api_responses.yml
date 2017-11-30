@@ -7,3 +7,5 @@ product:
   - 'We found information about {title}.'
 tool:
   - 'Here is the {title}:'
+category_list:
+  - 'Here are some article categories you can read about: {category_list}.'

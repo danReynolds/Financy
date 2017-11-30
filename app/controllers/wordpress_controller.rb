@@ -74,6 +74,18 @@ class WordpressController < ApplicationController
     }
   end
 
+  def list_categories
+    json = File.read('category_map.json')
+    obj = JSON.parse(json)
+
+    args = {
+      category_list: obj.keys.sample(DEFAULT_CATEGORY_SIZE).join(', ')
+    }
+    render json: {
+      speech: ApiResponse.get_response(:category_list, args)
+    }
+  end
+
   private
 
   def wordpress_params
