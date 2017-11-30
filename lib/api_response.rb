@@ -51,8 +51,7 @@ class ApiResponse
         google_basic_card(args)
       ]
     end
-
-<<<<<<< HEAD
+    
     def link_out_platform_responses(args)
       [
         google_link_out_card(args),
@@ -71,10 +70,6 @@ class ApiResponse
           "destinationName": args[:title],
           "url": args[:url]
       }
-=======
-    def platform_responses(args, type = :basic)
-      send("#{type}_platform_responses", args)
->>>>>>> Merge with master
     end
 
     def google_basic_card(args)
