@@ -14,12 +14,15 @@ class WordpressController < ApplicationController
 
       args = {
         posts: posts.map do |post|
-          post['title']['rendered']
+          { title: post['title']['rendered'],
+            link: post['link'],
+            imageUrl: post['_embedded']['wp:featuredmedia']['source_url']}
         end.en.conjunction(article: false)
       }
 
       render json: {
-        speech: ApiResponse.get_response(:posts, args)
+        speech: ApiResponse.get_response(:posts, args),
+        messages: ApiResponse.platform_responses(args)
       }
     else
       args = {
