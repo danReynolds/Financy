@@ -34,10 +34,12 @@ class WordpressController < ApplicationController
   end
 
   def product
-    product = WordpressApi::get_product(wordpress_params.slice(:product))
+    product = WordpressApi::get_product(wordpress_params.slice(:product)).first
+    data = product['nw_review_data']['product_data']['data']
+
     args = {
-      detail_link: product['product_data']['data']['detail_link'],
-      img_source: product['product_data']['data']['image_source_large'],
+      detail_link: data['detail_link'],
+      img_source: data['image_source_large'],
       product_name: product['name']
     }
 
