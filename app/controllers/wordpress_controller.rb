@@ -48,11 +48,26 @@ class WordpressController < ApplicationController
     }
   end
 
+  def tool
+    tool_name = wordpress_params[:tool]
+
+    tool = WordpressApi::get_tool(tool: tool_name)
+
+    args = {
+      name: tool_name,
+      url: tool['nw_tool_url']
+    }
+
+    render json: {
+      speech: ApiResponse.get_response(:tool, args)
+    }
+  end
+
   private
 
   def wordpress_params
     params.require(:result).require(:parameters).permit(
-      :post_size, :post_category, :product
+      :post_size, :post_category, :product, :tool
     )
   end
 end

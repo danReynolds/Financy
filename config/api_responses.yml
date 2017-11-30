@@ -5,3 +5,5 @@ categories:
   - 'We found some categories underneath {category}. Here they are: {categories}.'
 product:
   - 'We found information about {name}.'
+tool:
+  - 'Here is the {name}:'

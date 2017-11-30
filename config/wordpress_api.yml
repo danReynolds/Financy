@@ -1,5 +1,5 @@
 categories: https://www.nerdwallet.com/blog/wp-json/wp/v2/categories/?search={post_category}
 posts_by_category: https://nerdwallet.com/blog/wp-json/nw/v1/posts/?per_page={post_size}&categories={category_slug}&_embed=true
 reviews: https://www.nerdwallet.com/blog/wp-json/nw/v1/reviews/?search={search}
-tools: https://www.nerdwallet.com/blog/wp-json/nw/v1/tools/{tool_id}/
+tool: https://www.nerdwallet.com/blog/wp-json/nw/v1/tools/{tool}
 product: https://www.nerdwallet.com/blog/wp-json/nw/v1/reviews/?search={product}

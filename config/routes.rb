@@ -4,5 +4,6 @@ Rails.application.routes.draw do
   namespace :wordpress do
     post :categories
     post :product
+    post :tool
   end
 end

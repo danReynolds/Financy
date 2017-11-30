@@ -17,6 +17,11 @@ module WordpressApi
         url = replace_url(@api[:product], args)
         fetch_response(url)
       end
+
+      def get_tool(args = {})
+        url = replace_url(@api[:tool], args)
+        fetch_response(url)
+      end
     end
   end
 end
