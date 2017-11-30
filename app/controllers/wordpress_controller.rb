@@ -52,12 +52,11 @@ class WordpressController < ApplicationController
   end
 
   def tool
-    tool_name = wordpress_params[:tool]
 
-    tool = WordpressApi::get_tool(tool: tool_name)
+    tool = WordpressApi::get_tool(tool: wordpress_params[:tool])
 
     args = {
-      name: tool_name,
+      name: tool['title']['rendered'],
       url: tool['nw_tool_url']
     }
 
