@@ -3,3 +3,5 @@ posts:
   - 'Sure, I grabbed you some posts: {posts}.'
 categories:
   - 'We found some categories underneath {category}. Here they are: {categories}.'
+product:
+  - 'We found information about {name}.'
