@@ -38,6 +38,9 @@ class ApiResponse
         default_items << post[:link]
       end
 
+      messages << default_google_message
+      messages << default_facebook_message
+
       messages_hash_google = {
         :type => "carousel_card",
         :platform => "google",
@@ -52,12 +55,6 @@ class ApiResponse
       messages + [message_hash_default] + [messages_hash_google]
     end
 
-    def basic_platform_responses(args)
-      [
-        fb_basic_card(args[:title], args[:image_url], args[:button_url]),
-        google_basic_card(args)
-      ]
-    end
 
     def link_out_platform_responses(args)
       [
@@ -81,23 +78,10 @@ class ApiResponse
 
     def google_basic_card(args)
       {
-          "type": "basic_card",
-          "platform": "google",
-          "title": args[:title],
-          "subtitle": args[:subtitle],
-          "formattedText": args[:formatted_text],
-          "image": {
-            "url": args[:image_url]
-          },
-          "buttons": [
-            {
-              "title": args[:button_title],
-              "openUrlAction": {
-                "url": args[:button_url]
-              }
-            }
-          ]
-        }
+        :type => 0,
+        :platform => "facebook",
+        :speech => "Hi, Here are some relevant articles that we found:"
+      }
     end
 
     def google_carousel_card_item(count, title, imageUrl, link)
