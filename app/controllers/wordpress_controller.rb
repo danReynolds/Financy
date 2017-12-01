@@ -18,7 +18,7 @@ class WordpressController < ApplicationController
             title: post['title']['rendered'],
             button_url: post['link'],
             image_url: post.dig('_embedded', 'wp:featuredmedia')[0]['source_url'],
-            slug: (i + 1).en.ordinate
+            slug: i.to_s
           }
         end
       }
@@ -44,19 +44,22 @@ class WordpressController < ApplicationController
   end
 
   def select_post
-    post_index = wordpress_params[:post_index]
+    post_index = params['result']['contexts'].find do |context|
+      context['name'] == 'actions_intent_option'
+    end['parameters']['OPTION'].to_i
     posts = params['result']['contexts'].find do |context|
       context['name'] == 'posts'
     end['parameters']['posts']
-    post = posts[post_index]
 
+    post = posts[post_index]
     args = post.slice(:title, :button_url, :image_url).merge!({
       button_title: 'View',
-      formatted_text: ''
+      formatted_text: '',
+      subtitle: ''
     })
 
     render json: {
-      speech: ApiResponse.get_response(:posts, args),
+      speech: 'Here is the selected post:',
       messages: ApiResponse.platform_responses(args)
     }
   end
@@ -80,6 +83,7 @@ class WordpressController < ApplicationController
     end
 
     render json: {
+      speech: ApiResponse.get_response(:product, args),
       messages: ApiResponse.platform_responses(args, response_type)
     }
   end

@@ -49,51 +49,60 @@ class ApiResponse
     def basic_platform_responses(args)
       [
         basic_card("facebook", args[:title], args[:image_url], args[:button_url]),
-        basic_card("slack", args[:title], args[:image_url], args[:button_url]),
-        google_basic_card(args)
-      ]
+        basic_card("slack", args[:title], args[:image_url], args[:button_url])
+      ] + google_basic_cards(args)
     end
 
     def link_out_platform_responses(args)
       [
-        google_link_out_card(args),
         basic_card("facebook", args[:title], args[:image_url], args[:url]),
-        basic_card("slack", args[:title], args[:image_url], args[:url]),
-      ]
+        basic_card("slack", args[:title], args[:image_url], args[:url])
+      ] + google_link_out_cards(args)
     end
 
     def platform_responses(args, type = :basic)
       send("#{type}_platform_responses", args)
     end
 
-    def google_link_out_card(args)
+    def google_link_out_cards(args)
+      [{
+        "type": "simple_response",
+        "platform": "google",
+        "textToSpeech": 'Sure, here you are:'
+      },
       {
           "type": "link_out_chip",
           "platform": "google",
           "destinationName": args[:title],
           "url": args[:url]
-      }
+      }]
     end
 
-    def google_basic_card(args)
+    def google_basic_cards(args)
+      [{
+        "type": "simple_response",
+        "platform": "google",
+        "textToSpeech": 'Here you go:'
+      },
       {
-          "type": "basic_card",
-          "platform": "google",
-          "title": args[:title],
-          "subtitle": args[:subtitle],
-          "formattedText": args[:formatted_text],
-          "image": {
-            "url": args[:image_url]
-          },
-          "buttons": [
-            {
-              "title": args[:button_title],
-              "openUrlAction": {
-                "url": args[:button_url]
-              }
+        "type": "basic_card",
+        "platform": "google",
+        "title": args[:title],
+        "subtitle": args[:subtitle],
+        "formattedText": args[:formatted_text],
+        "image": {
+          "url": args[:image_url],
+          "accessibilityText": 'basic card image'
+        },
+        "buttons": [
+          {
+            "title": args[:button_title],
+            "openUrlAction": {
+              "url": args[:button_url]
             }
-          ]
-        }
+          }
+        ]
+      }]
     end
 
     def google_carousel_card_item(slug, title, imageUrl, link)
@@ -103,10 +112,10 @@ class ApiResponse
           :synonyms => []
         },
         :title => title,
-        :description => link,
+        :description => 'View',
         :image => {
           :url => imageUrl,
-          :accessibilityText => ""
+          :accessibilityText => 'carousel image'
         }
       }
     end
