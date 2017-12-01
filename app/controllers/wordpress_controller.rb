@@ -13,12 +13,12 @@ class WordpressController < ApplicationController
       )
 
       args = {
-        posts: posts.map do |post|
+        posts: posts.map.with_index do |post, i|
           {
             title: post['title']['rendered'],
             button_url: post['link'],
             image_url: post.dig('_embedded', 'wp:featuredmedia')[0]['source_url'],
-            slug: post['slug']
+            slug: (i + 1).en.ordinate
           }
         end
       }
@@ -27,7 +27,7 @@ class WordpressController < ApplicationController
         speech: ApiResponse.get_response(:posts, args),
         messages: ApiResponse.platform_responses(args, :carousel),
         contextOut: [{
-          name: 'posts', lifespan: 1, parameters: { posts: args[:posts] }
+          name: 'posts', lifespan: 5, parameters: { posts: args[:posts] }
         }]
       }
     else
@@ -36,10 +36,29 @@ class WordpressController < ApplicationController
         categories: categories.sample(DEFAULT_CATEGORY_SIZE)
           .map { |category| category['name'] }.en.conjunction(article: false)
       }
+
       render json: {
-        speech: ApiResponse.get_response(:categories, args),
+        speech: ApiResponse.get_response(:categories, args)
       }
     end
+  end
+
+  def select_post
+    post_index = wordpress_params[:post_index]
+    posts = params['result']['contexts'].find do |context|
+      context['name'] == 'posts'
+    end['parameters']['posts']
+    post = posts[post_index]
+
+    args = post.slice(:title, :button_url, :image_url).merge!({
+      button_title: 'View',
+      formatted_text: ''
+    })
+
+    render json: {
+      speech: ApiResponse.get_response(:posts, args),
+      messages: ApiResponse.platform_responses(args)
+    }
   end
 
   def product
@@ -49,9 +68,10 @@ class WordpressController < ApplicationController
     args = if product_data
       {
         button_url: "https://nerdwallet.com#{product_data['detail_link']}",
-        image_url: product_data['image_source_large'],
+        image_url: product_data['image_source_large'].sub('//', 'https://'),
         button_title: 'View',
         formatted_text: '',
+        subtitle: '',
         title: product.dig('nw_review_data', 'name')
       }
     else
@@ -60,7 +80,6 @@ class WordpressController < ApplicationController
     end
 
     render json: {
-      speech: ApiResponse.get_response(:product, args),
       messages: ApiResponse.platform_responses(args, response_type)
     }
   end
@@ -94,7 +113,7 @@ class WordpressController < ApplicationController
 
   def wordpress_params
     params.require(:result).require(:parameters).permit(
-      :post_size, :post_category, :product, :tool
+      :post_size, :post_category, :product, :tool, :post_index
     )
   end
 end

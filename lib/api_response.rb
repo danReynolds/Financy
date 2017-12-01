@@ -119,7 +119,7 @@ class ApiResponse
         :imageUrl => imageUrl,
         :buttons => [
           {
-            :text => link,
+            :text => 'View',
             :postback => link
           }
         ]

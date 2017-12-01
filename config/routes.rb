@@ -6,5 +6,6 @@ Rails.application.routes.draw do
     post :product
     post :tool
     post :list_categories
+    post :select_post
   end
 end
