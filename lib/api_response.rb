@@ -105,7 +105,8 @@ class ApiResponse
         :title => title,
         :description => link,
         :image => {
-          :url => imageUrl
+          :url => imageUrl,
+          :accessibilityText => ""
         }
       }
     end
